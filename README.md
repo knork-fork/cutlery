@@ -17,6 +17,20 @@ cd myapp
 php -S 127.0.0.1:8080 -t public
 ```
 
+## Framework development
+
+```bash
+docker-compose up -d --build
+
+docker/composer install
+```
+
+Run tests:
+
+```bash
+docker/phpunit
+```
+
 -------------
 
 ## dev only

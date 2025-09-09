@@ -21,13 +21,14 @@ abstract class Response
      */
     public function __construct(
         private array|string $data,
-        private int $statusCode
+        private int $statusCode,
+        private string $contentType = 'application/json',
     ) {
     }
 
     public function output(?int $statusCode = null): void
     {
-        header('Content-Type: application/json');
+        header('Content-Type: ' . $this->contentType);
         http_response_code($statusCode ?? $this->statusCode);
         if (\is_array($this->data)) {
             echo json_encode($this->data);

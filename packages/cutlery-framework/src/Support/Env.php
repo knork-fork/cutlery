@@ -7,10 +7,12 @@ use KnorkFork\LoadEnvironment\Environment;
 
 final class Env
 {
-    public static function load(string $projectRoot, ?bool $allowHeaderOverride = null): void
+    public static function load(): void
     {
-        $envFile = $projectRoot . '/.env';
-        $allowOverride = $allowHeaderOverride ?? (getenv('ALLOW_ENV_OVERRIDE') === 'true');
+        $root = RootLocator::getProjectRoot();
+
+        $envFile = $root . '/.env';
+        $allowOverride = getenv('ALLOW_ENV_OVERRIDE') === 'true';
 
         $overrideEnvToTest = false;
         if ($allowOverride) {

@@ -3,34 +3,23 @@ declare(strict_types=1);
 
 namespace Cutlery\Routing;
 
+use Cutlery\Support\RootLocator;
 use Symfony\Component\Yaml\Yaml;
 
 final class RouteCache
 {
-    public static function load(string $configDir, string $cacheDir, bool $useCache = true): array
+    public const CACHE_FILE = '/config/routes.cache.php';
+
+    public static function buildIfOutdated(): void
     {
-        $yaml = $configDir.'/routes.yaml';
-        if (!is_file($yaml)) return [];
+        $root = RootLocator::getProjectRoot();
 
-        $cacheFile = $cacheDir.'/routes.cache.php';
+        $yamlPath = $root . '/config/routes.yaml';
+        $cachePath = $root . self::CACHE_FILE;
 
-        if (!$useCache) {
-            return self::parse($yaml);
+        if (!file_exists($cachePath) || filemtime($yamlPath) > filemtime($cachePath)) {
+            $parsed = Yaml::parseFile($yamlPath);
+            file_put_contents($cachePath, '<?php return ' . var_export($parsed, true) . ';');
         }
-
-        if (!is_file($cacheFile) || filemtime($yaml) > filemtime($cacheFile)) {
-            $routes = self::parse($yaml);
-            if (!is_dir($cacheDir)) @mkdir($cacheDir, 0775, true);
-            file_put_contents($cacheFile, '<?php return '.var_export($routes, true).';');
-            return $routes;
-        }
-        /** @var array $routes */
-        $routes = require $cacheFile;
-        return $routes;
-    }
-
-    private static function parse(string $yamlPath): array
-    {
-        return (array) Yaml::parseFile($yamlPath);
     }
 }

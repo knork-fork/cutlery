@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Cutlery\Routing;
 
-use App\Dto\AbstractRequestDto;
-use App\Exception\BadRequestException;
+use Cutlery\Dto\AbstractRequestDto;
+use Cutlery\Exception\BadRequestException;
 use RuntimeException;
 use Throwable;
 

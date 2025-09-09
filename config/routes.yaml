@@ -1,0 +1,88 @@
+invalid_config:
+    path: /invalid
+    description: Route config missing controller attribute
+
+minimalist_config:
+    path: /minimalist
+    controller: App\Controller\SimpleController::minimalistGet
+
+simple_get:
+    path: /simple
+    controller: App\Controller\SimpleController::simpleGet
+    method: GET
+    description: A simple GET endpoint
+    requestDto: null
+    status_code: 200
+    auth_required: false
+
+simple_post:
+    path: /simple
+    controller: App\Controller\SimpleController::simplePost
+    method: POST
+    description: A simple POST endpoint
+    requestDto: null
+    status_code: 200
+    auth_required: false
+
+simple_json:
+    path: /simple-json
+    controller: App\Controller\SimpleController::simpleJson
+    method: GET
+    description: A simple get endpoint that returns JSON
+    requestDto: null
+    status_code: 200
+    auth_required: false
+
+different_status:
+    path: /different-status
+    controller: App\Controller\SimpleController::differentStatus
+    method: GET
+    description: A simple get endpoint with a different status code
+    requestDto: null
+    status_code: 201
+    auth_required: false
+
+parameter_right:
+    path: /parameter/{value}
+    controller: App\Controller\SimpleController::parameterRight
+    method: GET
+    description: A simple get endpoint with a parameter in path
+    requestDto: null
+    status_code: 200
+    auth_required: false
+
+parameter_middle:
+    path: /parameter/{value}/test
+    controller: App\Controller\SimpleController::parameterMiddle
+    method: GET
+    description: A simple get endpoint with a parameter in middle of path
+    requestDto: null
+    status_code: 200
+    auth_required: false
+
+parameter_two:
+    path: /parameter/{value1}/test/{value2}
+    controller: App\Controller\SimpleController::parameterTwo
+    method: GET
+    description: A simple get endpoint with two parameters in path
+    requestDto: null
+    status_code: 200
+    auth_required: false
+
+parameter_dto:
+    path: /parameter-dto
+    controller: App\Controller\SimpleController::parameterDto
+    method: POST
+    description: A simple post endpoint with a request DTO object
+    requestDto: App\Dto\TestRequestDto
+    status_code: 200
+    auth_required: false
+
+parameter_mix:
+    path: /parameter-mix/{value1}
+    controller: App\Controller\SimpleController::parameterMix
+    method: POST
+    description: A simple post endpoint with a uri parameter and a request DTO object
+    requestDto: App\Dto\TestRequestDto
+    status_code: 200
+    auth_required: false

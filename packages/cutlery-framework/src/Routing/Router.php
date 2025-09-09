@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\System;
+namespace Cutlery\Routing;
 
-use App\Exception\NotFoundException;
-use App\Response\Response;
+use Cutlery\Exception\NotFoundException;
+use Cutlery\Response\Response;
+use Cutlery\Support\RootLocator;
 use RuntimeException;
 
 final class Endpoint
@@ -16,14 +17,13 @@ final class Endpoint
         public readonly string $description,
         public readonly ?string $requestDtoClass,
         public readonly int $statusCode,
+        public readonly bool $authRequired,
     ) {
     }
 }
 
 final class Router
 {
-    private const ROUTES_FILE = __DIR__ . '/../../config/routes.cache.php';
-
     private string $path;
     private string $method;
 
@@ -89,11 +89,13 @@ final class Router
     private function getMatchingRoute(): Endpoint
     {
         /** @var array<string, array<string, string|int|bool|null>> $routes */
-        $routes = require self::ROUTES_FILE;
+        $routes = require RootLocator::getProjectRoot() . RouteCache::CACHE_FILE;
 
         $matchingRoutes = [];
         foreach ($routes as $route) {
-            if ($this->doesRequestMatchConfiguredRoute((string) $route['method'], (string) $route['path'])) {
+            $path = (string) $route['path'];
+            $method = (string) ($route['method'] ?? 'GET');
+            if ($this->doesRequestMatchConfiguredRoute($method, $path)) {
                 $matchingRoutes[] = $route;
             }
         }
@@ -110,10 +112,11 @@ final class Router
         return new Endpoint(
             (string) $matchingRoutes[0]['path'],
             (string) $matchingRoutes[0]['controller'],
-            (string) $matchingRoutes[0]['method'],
-            (string) $matchingRoutes[0]['description'],
+            (string) ($matchingRoutes[0]['method'] ?? 'GET'),
+            (string) ($matchingRoutes[0]['description'] ?? ''),
             $requestDto,
-            (int) $matchingRoutes[0]['status_code'],
+            (int) ($matchingRoutes[0]['status_code'] ?? 200),
+            (bool) ($matchingRoutes[0]['auth_required'] ?? false),
         );
     }
 

@@ -3,42 +3,40 @@ declare(strict_types=1);
 
 namespace Cutlery;
 
-use Cutlery\Config\ConfigLocator;
 use Cutlery\Routing\RouteCache;
 use Cutlery\Support\Env;
-use App\System\Router;
 use Cutlery\Exception\BadRequestException;
 use Cutlery\Exception\NotFoundException;
 use Cutlery\Response\ExceptionResponse;
+use Cutlery\Routing\Router;
 
 final class Kernel
 {
-    public function __construct(private ?string $rootHint = null) {}
+    public function __construct() {}
 
     public function run(): void
     {
-        $root = ConfigLocator::projectRoot($this->rootHint);
+        Env::load();
 
-        // 1) env
-        Env::load($root);
+        RouteCache::buildIfOutdated();
 
-        // 2) routes (with cache)
-        $configDir = $root.'/config';
-        $cacheDir  = $root.'/var/cache';
-        $cacheOn   = (getenv('APP_ENV') ?? 'dev') !== 'dev';
-        $routes    = RouteCache::load($configDir, $cacheDir, $cacheOn);
-
-        // 3) dispatch
-        $uri = (string)($_SERVER['REQUEST_URI'] ?? '');
-        $router = new Router($uri, $routes);
-
+        // Dispatch request
+        $uri = $_SERVER['REQUEST_URI'];
+        $uri = is_string($uri) ? $uri : '';
+        $router = new Router($uri);
         try {
             $router->callEndpoint();
         } catch (\Throwable $e) {
-            $suppress = $e instanceof NotFoundException || $e instanceof BadRequestException;
-            $resp = new ExceptionResponse($e, $suppress);
-            $resp->output();
-            if (!$resp->suppressThrow) { throw $e; }
+            // Suppress user-caused exceptions being thrown and logged
+            $suppressThrow = $e instanceof NotFoundException
+                || $e instanceof BadRequestException;
+
+            $exception = new ExceptionResponse($e, $suppressThrow);
+            $exception->output();
+
+            if (!$exception->suppressThrow) {
+                throw $e;
+            }
         }
     }
 }
