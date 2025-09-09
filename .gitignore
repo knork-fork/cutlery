@@ -1,0 +1,38 @@
+# Composer
+/vendor/
+/composer.lock
+
+# Runtime / cache / logs
+/var/
+/storage/
+/*.log
+*.cache
+
+# PHPUnit / coverage
+/.phpunit.result.cache
+/phpunit.xml
+/phpunit.xml.dist
+/coverage/
+
+# IDE / editors
+/.idea/
+/.vscode/
+/*.swp
+*.swo
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Docker
+/.docker/
+/docker-data/
+/*.pid
+
+
+# Stubs remain tracked (you want them in repo),
+# but ignore any generated configs if you copy them to root
+/docker-compose.override.yml
+/.env
+.env.local
+.env.*.local
