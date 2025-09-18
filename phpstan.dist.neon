@@ -1,0 +1,14 @@
+parameters:
+    level: 9
+    checkUninitializedProperties: true
+    checkBenevolentUnionTypes: true
+    paths:
+        - packages/
+        - public/
+        - src/
+        - tests/
+    ignoreErrors:
+#        - message: '#Class App\\Entity\\.* has an uninitialized property#'
+        - message: '#Cannot cast mixed to .*#'
+          paths:
+              - packages/cutlery-db-postgres/src/Entity/AbstractEntity.php
