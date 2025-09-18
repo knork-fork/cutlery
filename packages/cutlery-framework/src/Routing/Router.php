@@ -107,7 +107,11 @@ final class Router
             throw new RuntimeException('Config error, multiple routes found for the same method');
         }
 
-        $requestDto = $matchingRoutes[0]['requestDto'] === null ? null : (string) $matchingRoutes[0]['requestDto'];
+        if (\array_key_exists('requestDto', $matchingRoutes[0]) === false) {
+            $requestDto = null;
+        } else {
+            $requestDto = $matchingRoutes[0]['requestDto'] === null ? null : (string) $matchingRoutes[0]['requestDto'];
+        }
 
         return new Endpoint(
             (string) $matchingRoutes[0]['path'],
