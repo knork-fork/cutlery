@@ -29,12 +29,12 @@ abstract class Command
     {
     }
 
-    public static function executeCommand(): int
+    public static function executeCommand(?Input $input = null, ?Output $output = null): int
     {
         // output and input should be autowired by container inited in kernel...
-        $output = new Output();
+        $output ??= new Output();
         try {
-            $input = new Input();
+            $input ??= new Input();
         } catch (Throwable $e) {
             $output->writeLine('Error: ' . $e->getMessage());
 

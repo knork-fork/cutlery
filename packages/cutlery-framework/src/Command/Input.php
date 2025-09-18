@@ -8,6 +8,8 @@ use Exception;
 // todo: add InputInterface later
 final class Input
 {
+    /** @var string[] */
+    private array $argv;
     /**
      * @var string[]
      */
@@ -19,17 +21,17 @@ final class Input
     private string $commandName;
     private bool $argumentsLoaded = false;
 
-    public function __construct()
+    /** @param string[]|null $argv */
+    public function __construct(?array $argv = null)
     {
+        /* @phpstan-ignore-next-line */
+        $this->argv = $argv ?? (isset($_SERVER['argv']) && \is_array($_SERVER['argv']) ? $_SERVER['argv'] : []);
         $this->parseArguments();
     }
 
     private function parseArguments(): void
     {
-        /**
-         * @var string[] $arguments
-         */
-        $arguments = $_SERVER['argv'] ?? [];
+        $arguments = $this->argv;
 
         // Remove script name
         array_shift($arguments);

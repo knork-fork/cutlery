@@ -11,11 +11,16 @@ final class Output
     /** @var resource */
     private $stream;
 
-    public function __construct()
+    /**
+     * @param resource|null $stream
+     */
+    public function __construct($stream = null)
     {
-        $stream = fopen('php://stdout', 'w');
-        if ($stream === false) {
-            throw new RuntimeException('Failed to open stdout stream.');
+        if ($stream === null) {
+            $stream = fopen('php://stdout', 'w');
+            if ($stream === false) {
+                throw new RuntimeException('Failed to open stdout stream.');
+            }
         }
 
         $this->stream = $stream;
