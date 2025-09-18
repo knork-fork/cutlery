@@ -36,7 +36,6 @@ docker/phpunit
 ## dev only
 
 to-do:
-- add tests for commands
 - add migratecommand to db package
 - load the rest from https://github.com/knork-fork/zet-gtfs-backend - done?
 - publish this repo to Packagist as knorkfork/cutlery-app
